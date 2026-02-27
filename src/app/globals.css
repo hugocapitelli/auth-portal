@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+:root {
+  --gold: #FDBF68;
+  --gold-hover: #E5A850;
+}
