@@ -74,7 +74,7 @@ export function createAuthMiddleware(userConfig?: AuthMiddlewareConfig) {
               request.cookies.set(name, value)
             );
             supabaseResponse = helpers.createNextResponse(request);
-            const hostname = request.nextUrl?.hostname ?? "";
+            const hostname = request.nextUrl.clone().hostname ?? "";
             const targetDomain = config.cookieDomain.replace(/^\./, "");
             const isMatchingDomain = hostname.endsWith(targetDomain);
 
