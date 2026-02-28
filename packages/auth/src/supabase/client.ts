@@ -15,15 +15,26 @@ export function createEximiaClient(
   anonKey: string,
   options?: EximiaClientOptions
 ) {
-  const domain = options?.cookieDomain ?? ".eximiaventures.com.br";
+  const targetDomain = options?.cookieDomain ?? ".eximiaventures.com.br";
+
+  // Only set cookie domain if the current hostname matches the target domain.
+  // This prevents cookie rejection when accessing via EasyPanel or other URLs.
+  const isMatchingDomain =
+    typeof window !== "undefined" &&
+    window.location.hostname.endsWith(targetDomain.replace(/^\./, ""));
+
+  const cookieOptions: Record<string, unknown> = {
+    path: "/",
+    sameSite: "lax",
+    secure: typeof window !== "undefined" && window.location.protocol === "https:",
+  };
+
+  if (isMatchingDomain) {
+    cookieOptions.domain = targetDomain;
+  }
 
   return createBrowserClient<Database>(url, anonKey, {
-    cookieOptions: {
-      domain,
-      path: "/",
-      sameSite: "lax",
-      secure: true,
-    },
+    cookieOptions,
   });
 }
 

@@ -74,15 +74,22 @@ export function createAuthMiddleware(userConfig?: AuthMiddlewareConfig) {
               request.cookies.set(name, value)
             );
             supabaseResponse = helpers.createNextResponse(request);
-            cookiesToSet.forEach(({ name, value, options }) =>
-              supabaseResponse.cookies.set(name, value, {
+            const hostname = request.nextUrl?.hostname ?? "";
+            const targetDomain = config.cookieDomain.replace(/^\./, "");
+            const isMatchingDomain = hostname.endsWith(targetDomain);
+
+            cookiesToSet.forEach(({ name, value, options }) => {
+              const cookieOpts: Record<string, unknown> = {
                 ...options,
-                domain: config.cookieDomain,
                 path: "/",
                 sameSite: "lax",
                 secure: true,
-              })
-            );
+              };
+              if (isMatchingDomain) {
+                cookieOpts.domain = config.cookieDomain;
+              }
+              supabaseResponse.cookies.set(name, value, cookieOpts);
+            });
           },
         },
       }
