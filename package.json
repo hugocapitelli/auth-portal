@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@eximia/auth": "https://github.com/hugocapitelli/eximia-auth.git#main",
+    "@eximia/auth": "file:./packages/auth",
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.93.1",
     "lucide-react": "^0.474.0",
